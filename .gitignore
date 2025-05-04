@@ -2,7 +2,13 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+*.pt
+.env
+*.so
+.DS_Store
+/vscode/
+/build/
+/dist/
 # C extensions
 *.so
 
