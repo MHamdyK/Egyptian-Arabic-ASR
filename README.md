@@ -48,7 +48,7 @@ The training scripts use PyTorch and Hugging Face Transformers. We employ best p
 
 ## Evaluation
 
-After fine-tuning, we evaluate the model on a held-out test set of Egyptian Arabic. The primary metric is **Word Error Rate (WER)**. In our experiments, the model achieves around **45% WER** on test data, which is competitive for this low-resource dialect. (For reference, Wav2Vec2 has been shown to outperform previous ASR methods with limited data when properly trained.
+After fine-tuning, we evaluate the model on a held-out test set of Egyptian Arabic. The primary metric is **Word Error Rate (WER)**. In our experiments, the model achieves around **49% WER** on test data, which is competitive for this low-resource dialect. (For reference, Wav2Vec2 has been shown to outperform previous ASR methods with limited data when properly trained.
 
 
 
