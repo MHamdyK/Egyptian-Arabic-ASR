@@ -22,20 +22,24 @@ Throughout, we use a shared Wav2Vec2 processor (feature extractor + tokenizer) f
 - **Data Collation:** Since audio/transcript lengths vary, we use a custom collator (`DataCollatorCTCWithPadding`) that pads input features and label sequences per batch. Padding positions in labels are set to -100 to be ignored by CTC loss.
 
 ## Model Architecture
+  
+We use **Wav2Vec2-XLS-R (300M)** as our ASR backbone. Specifically:
 
--We use Wav2Vec2-XLS-R (300M) as our ASR backbone. Specifically:
--The model is initialized from the pre-trained checkpoint facebook/wav2vec2-xls-r-300m, leveraging transfer learning to enhance performance on our specific dataset.
--Fine-tuning Configuration:
-   -Attention Dropout: 0.0
-   -Hidden Dropout: 0.0
-   -Feature Projection Dropout: 0.0
-   -Time Masking Probability: 0.05
-   -Layer Dropout: 0.0
--The output layer is a CTC head (Connectionist Temporal Classification) with mean reduction, used for character prediction.
--The model is configured to handle shape mismatches for the final layer using the ignore_mismatched_sizes=True argument.
--Vocabulary Size: Matches the tokenizer used in training, dynamically obtained using len(processor.tokenizer).
--The pad token ID is set according to the tokenizer to ensure compatibility with input formatting.
--The model is fine-tuned directly on labeled audio data, rather than performing self-supervised pre-training from scratch
+- The model is initialized from the **pre-trained checkpoint** `facebook/wav2vec2-xls-r-300m`, leveraging transfer learning to enhance performance on our specific dataset.  
+- **Fine-tuning Configuration:**  
+  - **Attention Dropout:** 0.0  
+  - **Hidden Dropout:** 0.0  
+  - **Feature Projection Dropout:** 0.0  
+  - **Time Masking Probability:** 0.05  
+  - **Layer Dropout:** 0.0  
+- The output layer is a **CTC head** (Connectionist Temporal Classification) with mean reduction, used for character prediction.  
+- The model is configured to handle **shape mismatches** for the final layer using the `ignore_mismatched_sizes=True` argument.  
+- **Vocabulary Size:** Matches the tokenizer used in training, dynamically obtained using `len(processor.tokenizer)`.  
+- The **pad token ID** is set according to the tokenizer to ensure compatibility with input formatting.  
+- The model is fine-tuned directly on **labeled audio data**, rather than performing self-supervised pre-training from scratch, as we leverage the robust feature extraction of the pre-trained XLS-R model.  
+
+This setup ensures that the model can efficiently adapt to our specific dialect data while leveraging the strengths of a large-scale pre-trained architecture.
+
 
 ## Training & Fine-tuning Pipeline
 
