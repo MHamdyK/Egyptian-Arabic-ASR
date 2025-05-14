@@ -23,12 +23,19 @@ Throughout, we use a shared Wav2Vec2 processor (feature extractor + tokenizer) f
 
 ## Model Architecture
 
-We use **Wav2Vec2 (CTC)** as our ASR backbone. Specifically:
-
-- The model is initialized **from scratch** (i.e., without pre-trained weights). The architecture is defined by `Wav2Vec2Config` with `vocab_size` matching our tokenizer.
-- The convolutional feature extractor and Transformer encoder layers follow the standard Wav2Vec2 design.
-- The output is connected to a CTC head that predicts characters.  
-- Wav2Vec2’s self-supervised training (masking and contrastive loss) is *not* separately applied here; instead, we directly train on labeled audio via CTC. This effectively uses synthetic labeled data as a proxy for unlabeled pre-training.
+-We use Wav2Vec2-XLS-R (300M) as our ASR backbone. Specifically:
+-The model is initialized from the pre-trained checkpoint facebook/wav2vec2-xls-r-300m, leveraging transfer learning to enhance performance on our specific dataset.
+-Fine-tuning Configuration:
+   -Attention Dropout: 0.0
+   -Hidden Dropout: 0.0
+   -Feature Projection Dropout: 0.0
+   -Time Masking Probability: 0.05
+   -Layer Dropout: 0.0
+-The output layer is a CTC head (Connectionist Temporal Classification) with mean reduction, used for character prediction.
+-The model is configured to handle shape mismatches for the final layer using the ignore_mismatched_sizes=True argument.
+-Vocabulary Size: Matches the tokenizer used in training, dynamically obtained using len(processor.tokenizer).
+-The pad token ID is set according to the tokenizer to ensure compatibility with input formatting.
+-The model is fine-tuned directly on labeled audio data, rather than performing self-supervised pre-training from scratch
 
 ## Training & Fine-tuning Pipeline
 
